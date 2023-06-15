@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">JAMZ</string>
+    <string name="add_event">Add event</string>
+    <string name="note_title_hint">Title</string>
+    <string name="note_content_hint">Content</string>
+    <string name="note_title">Note Title</string>
+    <string name="note_content">Note Content</string>
+    <string name="notes">Notes</string>
+    <string name="close_button">Close</string>
+    <string name="save_button">Save</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="save_button_description" />
+    <string name="event_title_hint" />
+    <string name="event_description_hint" />
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="edit_event">Edit</string>
+    <string name="delete_event">Delete</string>
+    <string name="event_title_label">Title</string>
+    <string name="event_description_label">Description</string>
+</resources>
