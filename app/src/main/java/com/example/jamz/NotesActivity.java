@@ -28,8 +28,6 @@ public class NotesActivity extends AppCompatActivity implements NotesAdapter.OnN
     ImageView menu;
     LinearLayout home;
     LinearLayout notes;
-    LinearLayout events;
-    LinearLayout settings;
     LinearLayout about;
 
     @Override
@@ -64,15 +62,11 @@ public class NotesActivity extends AppCompatActivity implements NotesAdapter.OnN
         menu = findViewById(R.id.menu);
         home = findViewById(R.id.home);
         notes = findViewById(R.id.notes);
-        events = findViewById(R.id.events);
-        settings = findViewById(R.id.settings);
         about = findViewById(R.id.about);
 
         menu.setOnClickListener(v -> openDrawer(drawerLayout));
         home.setOnClickListener(v -> redirectActivity(this, MainActivity.class));
         notes.setOnClickListener(v -> recreate());
-        events.setOnClickListener(v -> redirectActivity(this, EventsActivity.class));
-        settings.setOnClickListener(v -> redirectActivity(this, SettingsActivity.class));
         about.setOnClickListener(v -> redirectActivity(this, AboutActivity.class));
     }
 

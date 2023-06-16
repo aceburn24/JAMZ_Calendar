@@ -16,8 +16,6 @@ public class AboutActivity extends AppCompatActivity {
     ImageView menu;
     LinearLayout home;
     LinearLayout notes;
-    LinearLayout events;
-    LinearLayout settings;
     LinearLayout about;
 
     @Override
@@ -29,16 +27,12 @@ public class AboutActivity extends AppCompatActivity {
         menu = findViewById(R.id.menu);
         home = findViewById(R.id.home);
         notes = findViewById(R.id.notes);
-        events = findViewById(R.id.events);
-        settings = findViewById(R.id.settings);
         about = findViewById(R.id.about);
 
         menu.setOnClickListener(v -> openDrawer(drawerLayout));
         home.setOnClickListener(v -> redirectActivity(AboutActivity.this, MainActivity.class));
         notes.setOnClickListener(v -> redirectActivity(AboutActivity.this, NotesActivity.class));
-        events.setOnClickListener(v -> redirectActivity(AboutActivity.this, EventsActivity.class));
 
-        settings.setOnClickListener(v -> redirectActivity(AboutActivity.this, SettingsActivity.class));
         about.setOnClickListener(v -> recreate());
 
 

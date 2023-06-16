@@ -3,24 +3,26 @@ package com.example.jamz;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.datepicker.CalendarConstraints;
-import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements EventDialogFragment.OnNewEventCreatedListener, EventAdapter.EventInteractionListener {
 
@@ -28,10 +30,9 @@ public class MainActivity extends AppCompatActivity implements EventDialogFragme
     ImageView menu;
     LinearLayout home;
     LinearLayout notes;
-    LinearLayout events;
-    LinearLayout settings;
     LinearLayout about;
 
+    private MutableLiveData<Date> selectedDateLiveData;
     private List<Event> eventList;
     private EventAdapter eventAdapter;
 
@@ -44,16 +45,18 @@ public class MainActivity extends AppCompatActivity implements EventDialogFragme
         menu = findViewById(R.id.menu);
         home = findViewById(R.id.home);
         notes = findViewById(R.id.notes);
-        events = findViewById(R.id.events);
-        settings = findViewById(R.id.settings);
         about = findViewById(R.id.about);
 
         menu.setOnClickListener(v -> openDrawer(drawerLayout));
         home.setOnClickListener(v -> recreate());
         notes.setOnClickListener(v -> redirectActivity(MainActivity.this, NotesActivity.class));
-        events.setOnClickListener(v -> redirectActivity(MainActivity.this, EventsActivity.class));
-        settings.setOnClickListener(v -> redirectActivity(MainActivity.this, SettingsActivity.class));
         about.setOnClickListener(v -> redirectActivity(MainActivity.this, AboutActivity.class));
+
+        selectedDateLiveData = new MutableLiveData<>();
+        selectedDateLiveData.setValue(new Date());
+
+        Button datePickerButton = findViewById(R.id.datePickerButton);
+        datePickerButton.setOnClickListener(v -> showDatePickerDialog());
 
         // Set up the RecyclerView
         setupRecyclerView();
@@ -65,59 +68,54 @@ public class MainActivity extends AppCompatActivity implements EventDialogFragme
             eventDialog.setOnNewEventCreatedListener(MainActivity.this);
             eventDialog.show(getSupportFragmentManager(), "addEvent");
         });
+    }
 
-        // Initialize and set up the MaterialDatePicker
-        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
-        constraintsBuilder.setValidator(DateValidatorPointForward.now());
-        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select date")
-                .setCalendarConstraints(constraintsBuilder.build())
-                .build();
+    private void showDatePickerDialog() {
+        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
+        builder.setTitleText("Select Date");
+        MaterialDatePicker<Long> picker = builder.build();
 
-        datePicker.addOnPositiveButtonClickListener(selection -> {
+        picker.addOnPositiveButtonClickListener(selection -> {
+            // Handle date selection
             Calendar selectedDate = Calendar.getInstance();
             selectedDate.setTimeInMillis(selection);
-            filterEventsByDate(selectedDate.getTime());
+
+            onDatePickerDateSelected(selectedDate.get(Calendar.YEAR), selectedDate.get(Calendar.MONTH), selectedDate.get(Calendar.DAY_OF_MONTH));
         });
-        datePicker.show(getSupportFragmentManager(), datePicker.toString());
+
+        picker.show(getSupportFragmentManager(), picker.toString());
     }
 
     private void setupRecyclerView() {
         RecyclerView eventsRecyclerView = findViewById(R.id.eventsRecyclerView);
         eventList = new ArrayList<>();
 
-        // Add some sample events
-        eventList.add(new Event("Sample Event 1", "This is a sample event", new Date()));
-        eventList.add(new Event("Sample Event 2", "This is another sample event", new Date()));
-
         eventAdapter = new EventAdapter(eventList, MainActivity.this);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         eventsRecyclerView.setAdapter(eventAdapter);
+
+        filterEventsByDate();
+
+        selectedDateLiveData.observe(this, date -> filterEventsByDate());
     }
 
-    private void filterEventsByDate(Date date) {
-        List<Event> filteredEvents = new ArrayList<>();
+    public void onDatePickerDateSelected(int year, int month, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, dayOfMonth);
+        selectedDateLiveData.setValue(calendar.getTime());
+    }
 
-        for (Event event : eventList) {
-            if (isSameDay(event.getDate(), date)) {
-                filteredEvents.add(event);
-            }
-        }
+    private void filterEventsByDate() {
+        Date date = selectedDateLiveData.getValue();
+        if (date == null) return;
 
-        eventList.clear();
-        eventList.addAll(filteredEvents);
-        eventAdapter.notifyDataSetChanged();
+        // Populate your eventList with filtered events based on the date
+        // Your actual implementation may vary depending on where your events are stored
     }
 
     private boolean isSameDay(Date date1, Date date2) {
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        cal1.setTime(date1);
-        cal2.setTime(date2);
-
-        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
-                cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+        return sdf.format(date1).equals(sdf.format(date2));
     }
 
     public static void openDrawer(DrawerLayout drawerLayout) {

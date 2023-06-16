@@ -17,6 +17,12 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="155dp"
+            android:layout_height="109dp"
+            android:src="@drawable/logo" />
     </LinearLayout>
 
     <LinearLayout
@@ -55,47 +61,11 @@
             android:drawablePadding="8dp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/events"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/blue"
-            android:text="Events"
-            android:textSize="20sp"
-            android:drawableLeft="@drawable/baseline_event_24"
-            android:drawablePadding="8dp" />
-    </LinearLayout>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="15dp"
         android:background="@color/blue" />
-
-    <LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/settings"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/blue"
-            android:text="Settings"
-            android:textSize="20sp"
-            android:drawableLeft="@drawable/baseline_settings_24"
-            android:drawablePadding="8dp" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="350dp"
